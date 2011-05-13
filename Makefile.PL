@@ -1,31 +1,58 @@
-#!/usr/bin/env perl
-use warnings;
+
 use strict;
+use warnings;
 
-use vars qw( $VERSION );
+BEGIN { require 5.006; }
 
-# $Id: Makefile.PL 120 2008-03-03 00:35:57Z abuse $
-$VERSION = do {
-  my @r=(q$Revision: 120 $=~/\d+/g); sprintf "%d."."%03d"x$#r,@r
-};
+use ExtUtils::MakeMaker 6.31;
 
-use ExtUtils::MakeMaker;
-eval "use ExtUtils::MakeMaker::Coverage";
-warn "Note: ExtUtils::MakeMaker::Coverage not available, can't 'make testcover'\n"
-  if $@;
 
-WriteMakefile(
-              ABSTRACT => 'Extensible package-local way to override glob()',
-	      NAME     => 'Acme::Globule',
-	      VERSION  => '0.003',
 
-              PREREQ_PM => {
-                            # We wedge ourselves into File::Glob, which is
-                            # how glob() is implemented from Perl 5.6
-                            # onwards.
-                            'File::Glob' => undef,
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'Extensible package-local way to override glob()',
+  'AUTHOR' => 'Peter Corlett <abuse@cabal.org.uk>',
+  'BUILD_REQUIRES' => {
+    'English' => '0',
+    'File::Find' => '0',
+    'File::Temp' => '0',
+    'Test::More' => '0'
+  },
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31'
+  },
+  'DISTNAME' => 'Acme-Globule',
+  'EXE_FILES' => [],
+  'LICENSE' => 'perl',
+  'NAME' => 'Acme::Globule',
+  'PREREQ_PM' => {
+    'File::Glob' => '0',
+    'Module::Load' => '0',
+    'Regexp::Common' => '0'
+  },
+  'VERSION' => '0.004',
+  'test' => {
+    'TESTS' => 't/*.t'
+  }
+);
 
-			    # required by Acme::Globule::Range
-                            'Regexp::Common' => undef,
-                           },
-	     );
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
+

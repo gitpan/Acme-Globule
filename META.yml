@@ -1,13 +1,24 @@
---- #YAML:1.0
-name:                Acme-Globule
-version:             0.003
-abstract:            Extensible package-local way to override glob()
-license:             ~
-generated_by:        ExtUtils::MakeMaker version 6.36
-distribution_type:   module
-requires:     
-    File::Glob:                    
-    Regexp::Common:                
+---
+abstract: 'Extensible package-local way to override glob()'
+author:
+  - 'Peter Corlett <abuse@cabal.org.uk>'
+build_requires:
+  English: 0
+  File::Find: 0
+  File::Temp: 0
+  Test::More: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.31
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110930'
+license: perl
 meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
-    version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Acme-Globule
+requires:
+  File::Glob: 0
+  Module::Load: 0
+  Regexp::Common: 0
+  perl: 5.006
+version: 0.004
